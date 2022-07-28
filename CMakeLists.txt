@@ -45,6 +45,9 @@ FetchContent_Declare(rt-demo
 
 FetchContent_MakeAvailable(rt-demo)
 
+add_definitions(-DSPDLOG_ACTIVE_LEVEL=1) # debug level
+
+find_package(spdlog REQUIRED)
 find_package(DAQNavi REQUIRED)
 
 add_subdirectory(examples/blink)
