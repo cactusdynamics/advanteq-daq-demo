@@ -1,6 +1,7 @@
 #include <bdaqctrl.h>
 #include <spdlog/spdlog.h>
 
+#include <bitset>
 #include <chrono>
 #include <cstdlib>
 #include <iostream>
@@ -34,25 +35,25 @@ int main(int argc, const char* argv[]) {
   SPDLOG_DEBUG("Using device {}", argv[1]);
 
   // Create an DO control object in "instant mode"
-  InstantDoCtrl*    instant_do_ctrl = InstantDoCtrl::Create();
+  InstantDiCtrl*    instant_di_ctrl = InstantDiCtrl::Create();
   DeviceInformation dev_info{device_desc};
 
   // Set the selected device
-  ErrorCode ret = instant_do_ctrl->setSelectedDevice(dev_info);
+  ErrorCode ret = instant_di_ctrl->setSelectedDevice(dev_info);
   if (BioFailed(ret)) {
     PrintDaqError(ret);
     return 1;
   }
 
-  int   port_count = instant_do_ctrl->getPortCount();
-  auto* feature = instant_do_ctrl->getFeatures();
+  int   port_count = instant_di_ctrl->getPortCount();
+  auto* feature = instant_di_ctrl->getFeatures();
   SPDLOG_DEBUG("This device has {} ports -> DO supported: {}, DI supported: {}", port_count, feature->getDoSupported(), feature->getDiSupported());
 
   // Initialize the DO port direction
   // Remember that a port is 8 channels, so this will set all 8 channels into output mode.
   // My USB-4704 doesn't allow output mode to be selected.
-  // Array<DioPort>* ports = instant_do_ctrl->getPorts();
-  // ret = ports->getItem(0).setDirectionMask(Output);
+  // Array<DioPort>* ports = instant_di_ctrl->getPorts();
+  // ret = ports->getItem(0).setDirectionMask(Input);
   // if (BioFailed(ret)) {
   //   PrintDaqError(ret);
   //   return 1;
@@ -62,19 +63,23 @@ int main(int argc, const char* argv[]) {
 
   while (true) {
     state = (state + 1) % 2;
-    SPDLOG_DEBUG("Write: {}", state);
-    ret = instant_do_ctrl->WriteBit(0, 4, state);
+    uint8_t port_data = 0;
+
+    ret = instant_di_ctrl->Read(0, port_data);
     if (BioFailed(ret)) {
       PrintDaqError(ret);
       return 1;
     }
 
-    std::this_thread::sleep_for(2000ms);
+    std::bitset<8> port_bits(port_data);
+    SPDLOG_INFO("Read data: {} - {}", port_bits.to_string(), port_bits[0]);
+
+    std::this_thread::sleep_for(300ms);
   }
 
   // Close and cleanup the device.
   // TODO: wrap this with RAII.
-  instant_do_ctrl->Dispose();
+  instant_di_ctrl->Dispose();
   delete device_desc;
   return 0;
 }

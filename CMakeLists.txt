@@ -51,3 +51,4 @@ find_package(spdlog REQUIRED)
 find_package(DAQNavi REQUIRED)
 
 add_subdirectory(examples/blink)
+add_subdirectory(examples/button)

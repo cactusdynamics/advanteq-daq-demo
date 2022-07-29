@@ -7,9 +7,9 @@ find_library(DAQNAVI_LIBRARY
 
 find_path(DAQNAVI_INCLUDE_DIR
   NAMES
-  inc/bdaqctrl.h
+  bdaqctrl.h
   PATHS
-  /opt/advantech
+  /opt/advantech/inc
 )
 
 find_package_handle_standard_args(biodaq REQUIRED_VARS DAQNAVI_LIBRARY DAQNAVI_INCLUDE_DIR)
