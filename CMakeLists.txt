@@ -52,3 +52,4 @@ find_package(DAQNavi REQUIRED)
 
 add_subdirectory(examples/blink)
 add_subdirectory(examples/button)
+add_subdirectory(examples/instantai)
