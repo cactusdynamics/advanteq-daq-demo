@@ -77,6 +77,13 @@ int main(int argc, const char* argv[]) {
       channel.getSignalType());  // Value of 0 is Single ended.
   }
 
+  for (int i = 0; i < channels->getCount(); ++i) {
+    ret = channels->getItem(i).setSignalType(Differential);
+    if (BioFailed(ret)) {
+      PrintDaqError(ret);
+      exit(1);
+    }
+  }
   // // Let's set channel 2 and 3 to differential:
   // // This is not allowed on my USB-4704
   // ret = channels->getItem(2).setSignalType(Differential);
