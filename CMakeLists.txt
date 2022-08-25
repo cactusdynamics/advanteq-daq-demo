@@ -34,20 +34,21 @@ else()
   message(STATUS "Not running clang-tidy. Use ENABLE_CLANG_TIDY=ON to run clang-tidy.")
 endif()
 
-include(FetchContent)
-
-# Disable examples from rt-demo
-set(ENABLE_EXAMPLES OFF)
-FetchContent_Declare(rt-demo
-  GIT_REPOSITORY https://github.com/cactusdynamics/rt-demo.git
-  GIT_TAG master # FIXME: use a tagged release
-)
-
-FetchContent_MakeAvailable(rt-demo)
+# include(FetchContent)
+#
+# # Disable examples from rt-demo
+# set(ENABLE_EXAMPLES OFF)
+# FetchContent_Declare(rt-demo
+#   GIT_REPOSITORY https://github.com/cactusdynamics/rt-demo.git
+#   GIT_TAG master # FIXME: use a tagged release
+# )
+#
+# FetchContent_MakeAvailable(rt-demo)
 
 add_definitions(-DSPDLOG_ACTIVE_LEVEL=1) # debug level
 
 find_package(spdlog REQUIRED)
+find_package(fmt REQUIRED)
 find_package(DAQNavi REQUIRED)
 
 add_subdirectory(examples/blink)

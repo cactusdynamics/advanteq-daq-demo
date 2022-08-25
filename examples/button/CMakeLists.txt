@@ -5,10 +5,11 @@ add_executable(advantech-demo-button
 target_link_libraries(advantech-demo-button
   PRIVATE
   biodaq
+  fmt
 )
 
 target_compile_features(advantech-demo-button
-  PUBLIC 
+  PUBLIC
   c_std_11
   cxx_std_20
 )
